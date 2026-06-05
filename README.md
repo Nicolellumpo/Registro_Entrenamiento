@@ -1,6 +1,6 @@
 # 🏋️ GymTracker — Registro de Entrenamiento 2026
 
-Aplicación web personal para registrar el entrenamiento diario: asistencia, cardio, ejercicios con cargas, y sensaciones físicas. Desarrollada con **HTML, CSS y JavaScript vanilla** — sin frameworks ni dependencias externas.
+Aplicación web personal para registrar el entrenamiento diario: asistencia, cardio, ejercicios con cargas, y sensaciones físicas. Desarrollada con **HTML, CSS y JavaScript** — sin frameworks ni dependencias externas.
 
 Inspirada en mis propias planillas de Excel que usaba para trackear todo, transformadas en una sola app que puedo abrir desde cualquier dispositivo.
 
@@ -23,41 +23,15 @@ Inspirada en mis propias planillas de Excel que usaba para trackear todo, transf
 
 ---
 
-## Técnicas de JavaScript aplicadas
-
-```
-✔ Manipulación del DOM — querySelector, innerHTML, createElement, classList
-✔ localStorage — persistencia entre sesiones (get/set/parse)
-✔ Eventos — onclick, oninput, onchange
-✔ Array methods — filter, map, find, forEach, sort, reduce
-✔ Date API — cálculo de día de la semana, semana del mes, filtros por mes
-✔ Lógica de estado — objeto de estado sincronizado con la UI
-✔ Render dinámico — funciones de renderizado reactivo sin frameworks
-✔ Diseño de datos — estructura JSON para colecciones múltiples
-```
-
-## Diseño y CSS
-
-```
-✔ CSS Variables — sistema de tokens (colores, radios, tipografía)
-✔ CSS Grid y Flexbox — layouts responsivos
-✔ Media queries — adaptación mobile
-✔ Animaciones CSS — toast, transiciones de hover, barras de progreso
-✔ Google Fonts — Bebas Neue + DM Sans + DM Mono
-✔ Custom scrollbar — scrollbar estilizado nativo
-```
-
----
-
 ## Estructura del proyecto
 
 ```
 gymtracker/
-├── index.html     # App completa (HTML + CSS + JS en un archivo)
+├── gym.css
+├── gym.js 
+├── index.html    
 └── README.md
 ```
-
-Todo en un único archivo — decisión intencional para demostrar que se puede construir una app funcional y bien estructurada sin herramientas de build.
 
 ---
 
