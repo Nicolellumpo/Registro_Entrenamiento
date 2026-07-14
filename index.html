@@ -10,438 +10,382 @@
 </head>
 <body>
 
-<div id="toast"></div> 
-<!-- ════════════════════════════════════════════════════════
-  AUTH — Login / Registro
-═════════════════════════════════════════════════════ 
-<div id="auth-wrap" class="auth-wrap">
-  <div class="auth-box">
-    <div class="auth-logo">GymTracker</div>
-    <div class="auth-sub">// tu entrenamiento, desde cualquier lugar</div>
- 
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="setAuthTab('login')">Ingresar</button>
-      <button class="auth-tab"        onclick="setAuthTab('registro')">Registrarse</button>
-    </div>
- 
-    <div class="auth-error" id="auth-error"></div>
- 
-     LOGIN 
-    <div id="form-login">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="tu@email.com"/>
-      </div>
-      <div class="auth-field">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
-      </div>
-      <button class="btn-auth" onclick="doLogin()" id="btn-login">Ingresar</button>
-    </div>
- 
-     REGISTRO 
-    <div id="form-registro" style="display:none">
-      <div class="auth-field">
-        <label>Nombre</label>
-        <input type="text" id="reg-nombre" placeholder="Tu nombre"/>
-      </div>
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="tu@email.com"/>
-      </div>
-      <div class="auth-field">
-        <label>Contraseña (mín. 6 caracteres)</label>
-        <input type="password" id="reg-pass" placeholder="••••••••"/>
-      </div>
- 
-      <div class="auth-optional">datos opcionales</div>
- 
-      <div class="grid-2" style="gap:.75rem;margin-bottom:1rem">
-        <div class="auth-field">
-          <label>Peso (kg)</label>
-          <input type="number" id="reg-peso" placeholder="65" min="30" max="200"/>
-        </div>
-        <div class="auth-field">
-          <label>Altura (cm)</label>
-          <input type="number" id="reg-altura" placeholder="165" min="100" max="220"/>
-        </div>
-      </div>
- 
-      <div class="auth-field">
-        <label>Objetivo</label>
-        <select id="reg-objetivo">
-          <option value="">Sin especificar</option>
-          <option>Definición muscular</option>
-          <option>Aumento de masa muscular</option>
-          <option>Pérdida de peso</option>
-          <option>Mantenimiento</option>
-          <option>Fuerza</option>
-        </select>
-      </div>
- 
-      <button class="btn-auth" onclick="doRegistro()" id="btn-registro">Crear cuenta</button>
-    </div>
-  </div>
-</div>
--->
+<div id="contenedorToast"></div> 
 
-
-<!-- NAV -->
+<!-- ── Navegación principal ────────────────────────────── -->
 <nav>
-  <div class="nav-logo">GYM<span>TRACKER</span></div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="setScreen('hoy')">🏋 Hoy</button>
-    <button class="nav-tab" onclick="setScreen('cardio')">🏃 Cardio</button>
-    <button class="nav-tab" onclick="setScreen('ejercicios')">💪 Ejercicios</button>
-    <button class="nav-tab" onclick="setScreen('asistencia')">📅 Asistencia</button>
-    <button class="nav-tab" onclick="setScreen('historial')">📋 Historial</button>
-    <button class="nav-tab" onclick="setScreen('rutina')">📄 Rutina</button>
+  <div class="logoNav">GYM<span class="logoNavSufijo">TRACKER</span></div>
+  <div class="contenedorPestaniasNav">
+    <button class="pestaniaNav activa" onclick="setScreen('hoy')">🏋 Hoy</button>
+    <button class="pestaniaNav" onclick="setScreen('cardio')">🏃 Cardio</button>
+    <button class="pestaniaNav" onclick="setScreen('ejercicios')">💪 Ejercicios</button>
+    <button class="pestaniaNav" onclick="setScreen('asistencia')">📅 Asistencia</button>
+    <button class="pestaniaNav" onclick="setScreen('historial')">📋 Historial</button>
+    <button class="pestaniaNav" onclick="setScreen('rutina')">📄 Rutina</button>
   </div>
 </nav>
-
+ 
 <main>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: HOY (Registro Simple)
-════════════════════════════════════════════════════════ -->
-<div class="screen active" id="screen-hoy">
-
-  <div class="sec-title">Registro del día</div>
-  <div class="sec-sub">// cómo salió el entrenamiento de hoy</div>
-
-  <div class="datebar">
-    <div class="datebar-left">
-      <h2 id="hoy-titulo">HOY</h2>
-      <p id="hoy-fecha-label">—</p>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: HOY — Registro diario
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla activa" id="pantalla-hoy">
+ 
+    <h1 class="tituloPantalla">Registro del día</h1>
+    <p class="subtituloPantalla">// cómo salió el entrenamiento de hoy</p>
+ 
+    <!-- Barra de fecha -->
+    <div class="barraFecha">
+      <div class="barraFechaTextos">
+        <h2 class="tituloDiaSemana" id="tituloDiaHoy">HOY</h2>
+        <p class="fechaLegible" id="fechaLegibleHoy">—</p>
+      </div>
+      <input type="date" class="inputFecha" id="inputFechaHoy" onchange="actualizarFechaHoy()"/>
     </div>
-    <input type="date" class="date-input" id="hoy-fecha" onchange="actualizarFechaHoy()"/>
-  </div>
-
-  <div class="card">
-    <div class="card-head"><h3>💬 Sensaciones</h3></div>
-    <div class="card-body">
-      <div class="grid-2" style="gap:1.25rem">
-
-        <div class="field">
-          <label>Grupo muscular</label>
-          <select id="reg-grupo">
+ 
+    <!-- Formulario de sensaciones -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta">
+        <h3 class="tituloTarjeta">💬 Sensaciones</h3>
+      </div>
+      <div class="cuerpoTarjeta">
+        <div class="grilla2Columnas">
+ 
+          <!-- Campo: grupo muscular -->
+          <div class="campoFormulario">
+            <label for="selectGrupoMuscular">Grupo muscular</label>
+            <select id="selectGrupoMuscular">
+              <option value="">Seleccioná...</option>
+              <option>Glúteo / Isquios</option>
+              <option>Espalda / Bíceps</option>
+              <option>Cuadriceps / Glúteo</option>
+              <option>Pecho / Tríceps / Hombro</option>
+              <option>Legs Day</option>
+            </select>
+          </div>
+ 
+          <!-- Campo: energía con estrellas -->
+          <div class="campoFormulario">
+            <label>Energía (1–5)</label>
+            <div class="contenedorEstrellas" id="contenedorEstrellaEnergia">
+              <div class="estrella" onclick="setStar(1)">1</div>
+              <div class="estrella" onclick="setStar(2)">2</div>
+              <div class="estrella" onclick="setStar(3)">3</div>
+              <div class="estrella" onclick="setStar(4)">4</div>
+              <div class="estrella" onclick="setStar(5)">5</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: fatiga -->
+          <div class="campoFormulario">
+            <label>Fatiga</label>
+            <div class="grupoPills" id="grupoPillsFatiga">
+              <div class="pill" onclick="togglePill(this,'fatiga','Baja')">Baja</div>
+              <div class="pill" onclick="togglePill(this,'fatiga','Media')">Media</div>
+              <div class="pill" onclick="togglePill(this,'fatiga','Alta')">Alta</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: sensación post-entreno -->
+          <div class="campoFormulario">
+            <label>Sensación post-entreno</label>
+            <div class="grupoPills" id="grupoPillsSensacion">
+              <div class="pill" onclick="togglePill(this,'sensacion','Recuperable')">Recuperable</div>
+              <div class="pill" onclick="togglePill(this,'sensacion','Cansancio alto')">Cansancio alto</div>
+              <div class="pill" onclick="togglePill(this,'sensacion','Muy agotada')">Muy agotada</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: progresión -->
+          <div class="campoFormulario">
+            <label>Progresión</label>
+            <div class="grupoPills" id="grupoPillsProgresion">
+              <div class="pill" onclick="togglePill(this,'progresion','Subí peso')">⬆ Subí peso</div>
+              <div class="pill" onclick="togglePill(this,'progresion','Mantuve')">➡ Mantuve</div>
+              <div class="pill" onclick="togglePill(this,'progresion','Bajé peso')">⬇ Bajé peso</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: sueño -->
+          <div class="campoFormulario">
+            <label>Calidad del sueño</label>
+            <div class="grupoPills" id="grupoPillsSueno">
+              <div class="pill" onclick="togglePill(this,'sueno','Bueno')">😴 Bueno</div>
+              <div class="pill" onclick="togglePill(this,'sueno','Regular')">😐 Regular</div>
+              <div class="pill" onclick="togglePill(this,'sueno','Malo')">😵 Malo</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: molestias -->
+          <div class="campoFormulario">
+            <label>Molestias</label>
+            <div class="grupoPills" id="grupoPillsMolestias">
+              <div class="pill" onclick="togglePill(this,'molestias','Ninguna')">✓ Ninguna</div>
+              <div class="pill" onclick="togglePill(this,'molestias','Hombro')">Hombro</div>
+              <div class="pill" onclick="togglePill(this,'molestias','Lumbar')">Lumbar</div>
+              <div class="pill" onclick="togglePill(this,'molestias','Rodilla')">Rodilla</div>
+              <div class="pill" onclick="togglePill(this,'molestias','Otro')">Otro</div>
+            </div>
+          </div>
+ 
+          <!-- Campo: notas -->
+          <div class="campoFormulario">
+            <label for="textareaNotasHoy">Notas adicionales</label>
+            <textarea id="textareaNotasHoy" placeholder="Algo que quieras recordar de hoy..."></textarea>
+          </div>
+ 
+        </div>
+ 
+        <!-- Botones de acción -->
+        <div class="filaBotons">
+          <button class="boton botonPrimario" onclick="guardarRegistro()">💾 Guardar registro</button>
+          <button class="boton botonSecundario" onclick="limpiarFormHoy()">✕ Limpiar</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Resumen estadístico del mes -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta">
+        <h3 class="tituloTarjeta">📊 Resumen del mes
+          <span class="etiquetaTarjeta" id="etiquetaMesActual">—</span>
+        </h3>
+      </div>
+      <div class="cuerpoTarjeta">
+        <div class="tiraEstadisticas" id="tiraEstadisticasHoy"></div>
+      </div>
+    </div>
+ 
+  </section>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: CARDIO
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-cardio">
+ 
+    <h1 class="tituloPantalla">Cardio</h1>
+    <p class="subtituloPantalla">// minutos y pulsaciones por sesión</p>
+ 
+    <div class="barraFecha">
+      <div class="barraFechaTextos">
+        <h2 class="tituloDiaSemana" id="tituloDiaCardio">CARDIO</h2>
+        <p class="fechaLegible" id="fechaLegibleCardio">—</p>
+      </div>
+      <input type="date" class="inputFecha" id="inputFechaCardio" onchange="actualizarFechaCardio()"/>
+    </div>
+ 
+    <!-- Formulario de sesión de cardio -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">🏃 Sesión de hoy</h3></div>
+      <div class="cuerpoTarjeta">
+        <div class="grilla3Columnas">
+          <div class="campoFormulario">
+            <label for="inputMinCaminando">Min caminando</label>
+            <input type="number" id="inputMinCaminando" placeholder="0" min="0"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputMinCorriendo">Min corriendo</label>
+            <input type="number" id="inputMinCorriendo" placeholder="0" min="0"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputMinBicicleta">Min bicicleta</label>
+            <input type="number" id="inputMinBicicleta" placeholder="0" min="0"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputHzCaminando">Hz caminando</label>
+            <input type="number" id="inputHzCaminando" placeholder="0" min="0"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputHzCorriendo">Hz corriendo</label>
+            <input type="number" id="inputHzCorriendo" placeholder="0" min="0"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputMinTotalesCardio">Min totales (auto)</label>
+            <input type="number" id="inputMinTotalesCardio" placeholder="0" readonly class="inputSoloLectura"/>
+          </div>
+        </div>
+        <div class="filaBotons">
+          <button class="boton botonPrimario" onclick="guardarCardio()">💾 Guardar cardio</button>
+          <button class="boton botonSecundario" onclick="limpiarCardio()">✕ Limpiar</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Vista semanal de cardio -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">📅 Esta semana</h3></div>
+      <div class="cuerpoTarjeta">
+        <div class="grillaDiasSemanaCardio" id="grillaSemanaCardio"></div>
+        <div class="tiraEstadisticas" id="tiraEstadisticasCardioMes"></div>
+      </div>
+    </div>
+ 
+  </section>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: EJERCICIOS
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-ejercicios">
+ 
+    <h1 class="tituloPantalla">Ejercicios</h1>
+    <p class="subtituloPantalla">// peso, series y progresión por ejercicio</p>
+ 
+    <div class="barraFecha">
+      <div class="barraFechaTextos">
+        <h2 class="tituloDiaSemana" id="tituloDiaEjercicios">SEMANA</h2>
+        <p class="fechaLegible" id="fechaLegibleEjercicios">—</p>
+      </div>
+      <input type="date" class="inputFecha" id="inputFechaEjercicios" onchange="actualizarFechaEj()"/>
+    </div>
+ 
+    <!-- Formulario para cargar ejercicio -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">💪 Cargar ejercicio</h3></div>
+      <div class="cuerpoTarjeta">
+ 
+        <div class="campoFormulario campoEjercicioNombre">
+          <label for="selectNombreEjercicio">Ejercicio</label>
+          <select id="selectNombreEjercicio">
             <option value="">Seleccioná...</option>
-            <option>Glúteo / Isquios</option>
-            <option>Espalda / Bíceps</option>
-            <option>Cuadriceps / Glúteo</option>
-            <option>Pecho / Tríceps / Hombro</option>
-            <option>Legs Day</option>
+            <optgroup label="🍑 Piernas / Glúteos">
+              <option>Hip Thrust (libre)</option>
+              <option>Hip Thrust (máquina)</option>
+              <option>Peso Muerto Convencional</option>
+              <option>Peso Muerto Unilateral</option>
+              <option>Sentadilla Búlgara</option>
+              <option>Patada de Glúteos</option>
+              <option>Máquina Abductores</option>
+              <option>Máquina de Isquios</option>
+              <option>Sentadilla en Smith</option>
+              <option>Sentadilla Goblet</option>
+              <option>Sentadilla Sumo</option>
+              <option>Sillón de Cuadriceps</option>
+              <option>Prensa</option>
+              <option>Aductores (máquina)</option>
+              <option>Abductores</option>
+              <option>Elevación de cadera a una pierna</option>
+            </optgroup>
+            <optgroup label="🔵 Espalda / Bíceps">
+              <option>Dorsalera (agarre abierto)</option>
+              <option>Remo Bajo con Cable</option>
+              <option>Pullover</option>
+              <option>Remo con Mancuerna</option>
+              <option>Curl Martillo</option>
+              <option>Bíceps con Barra W</option>
+              <option>Bíceps Unilateral</option>
+            </optgroup>
+            <optgroup label="🟠 Pecho / Tríceps / Hombro">
+              <option>Aperturas Peck Deck</option>
+              <option>Press de Banca</option>
+              <option>Banco Inclinado</option>
+              <option>Press de Hombros</option>
+              <option>Vuelos Laterales</option>
+              <option>Tríceps Pushdown</option>
+            </optgroup>
           </select>
         </div>
-
-        <div class="field">
-          <label>Energía (1–5)</label>
-          <div class="stars" id="stars-energia">
-            <div class="star" onclick="setStar(1)">1</div>
-            <div class="star" onclick="setStar(2)">2</div>
-            <div class="star" onclick="setStar(3)">3</div>
-            <div class="star" onclick="setStar(4)">4</div>
-            <div class="star" onclick="setStar(5)">5</div>
+ 
+        <div class="filaEjercicio">
+          <div class="campoFormulario">
+            <label for="inputDescripcionPeso">Descripción del peso</label>
+            <input type="text" id="inputDescripcionPeso" placeholder="Ej: 90+90+90+90 + barra 20"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputPesoTotalKg">Peso total (kg)</label>
+            <input type="number" id="inputPesoTotalKg" placeholder="110" min="0" step="0.5"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputSeriesEjercicio">Series</label>
+            <input type="text" id="inputSeriesEjercicio" placeholder="4x10"/>
+          </div>
+          <div class="campoFormulario">
+            <label for="inputNumeroSemana">Semana N°</label>
+            <input type="number" id="inputNumeroSemana" placeholder="1" min="1" max="6"/>
           </div>
         </div>
-
-        <div class="field">
-          <label>Fatiga</label>
-          <div class="pill-group" id="pills-fatiga">
-            <div class="pill" onclick="togglePill(this,'fatiga','Baja')">Baja</div>
-            <div class="pill" onclick="togglePill(this,'fatiga','Media')">Media</div>
-            <div class="pill" onclick="togglePill(this,'fatiga','Alta')">Alta</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Sensación post-entreno</label>
-          <div class="pill-group" id="pills-sensacion">
-            <div class="pill" onclick="togglePill(this,'sensacion','Recuperable')">Recuperable</div>
-            <div class="pill" onclick="togglePill(this,'sensacion','Cansancio alto')">Cansancio alto</div>
-            <div class="pill" onclick="togglePill(this,'sensacion','Muy agotada')">Muy agotada</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Progresión</label>
-          <div class="pill-group" id="pills-progresion">
-            <div class="pill" onclick="togglePill(this,'progresion','Subí peso')">⬆ Subí peso</div>
-            <div class="pill" onclick="togglePill(this,'progresion','Mantuve')">➡ Mantuve</div>
-            <div class="pill" onclick="togglePill(this,'progresion','Bajé peso')">⬇ Bajé peso</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Calidad del sueño</label>
-          <div class="pill-group" id="pills-sueno">
-            <div class="pill" onclick="togglePill(this,'sueno','Bueno')">😴 Bueno</div>
-            <div class="pill" onclick="togglePill(this,'sueno','Regular')">😐 Regular</div>
-            <div class="pill" onclick="togglePill(this,'sueno','Malo')">😵 Malo</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Molestias</label>
-          <div class="pill-group" id="pills-molestias">
-            <div class="pill" onclick="togglePill(this,'molestias','Ninguna')">✓ Ninguna</div>
-            <div class="pill" onclick="togglePill(this,'molestias','Hombro')">Hombro</div>
-            <div class="pill" onclick="togglePill(this,'molestias','Lumbar')">Lumbar</div>
-            <div class="pill" onclick="togglePill(this,'molestias','Rodilla')">Rodilla</div>
-            <div class="pill" onclick="togglePill(this,'molestias','Otro')">Otro</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Notas adicionales</label>
-          <textarea id="reg-notas" placeholder="Algo que quieras recordar de hoy..."></textarea>
-        </div>
-
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="guardarRegistro()">💾 Guardar registro</button>
-        <button class="btn btn-ghost" onclick="limpiarFormHoy()">✕ Limpiar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Resumen del mes -->
-  <div class="card">
-    <div class="card-head"><h3>📊 Resumen del mes <span class="tag" id="mes-actual-label">—</span></h3></div>
-    <div class="card-body">
-      <div class="stats-strip" id="stats-hoy"></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: CARDIO
-════════════════════════════════════════════════════════ -->
-<div class="screen" id="screen-cardio">
-
-  <div class="sec-title">Cardio</div>
-  <div class="sec-sub">// minutos y pulsaciones por sesión</div>
-
-  <div class="datebar">
-    <div class="datebar-left">
-      <h2 id="cardio-titulo">CARDIO</h2>
-      <p id="cardio-fecha-label">—</p>
-    </div>
-    <input type="date" class="date-input" id="cardio-fecha" onchange="actualizarFechaCardio()"/>
-  </div>
-
-  <div class="card">
-    <div class="card-head"><h3>🏃 Sesión de hoy</h3></div>
-    <div class="card-body">
-      <div class="grid-3">
-        <div class="field">
-          <label>Min caminando</label>
-          <input type="number" id="c-caminando" placeholder="0" min="0"/>
-        </div>
-        <div class="field">
-          <label>Min corriendo</label>
-          <input type="number" id="c-corriendo" placeholder="0" min="0"/>
-        </div>
-        <div class="field">
-          <label>Min bicicleta</label>
-          <input type="number" id="c-bici" placeholder="0" min="0"/>
-        </div>
-        <div class="field">
-          <label>Hz caminando</label>
-          <input type="number" id="c-hz-cam" placeholder="0" min="0"/>
-        </div>
-        <div class="field">
-          <label>Hz corriendo</label>
-          <input type="number" id="c-hz-cor" placeholder="0" min="0"/>
-        </div>
-        <div class="field">
-          <label>Min totales (auto)</label>
-          <input type="number" id="c-totales" placeholder="0" readonly style="opacity:.5"/>
+ 
+        <div class="filaBotons">
+          <button class="boton botonPrimario" onclick="guardarEjercicio()">💾 Guardar ejercicio</button>
+          <button class="boton botonSecundario" onclick="limpiarEj()">✕ Limpiar</button>
         </div>
       </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="guardarCardio()">💾 Guardar cardio</button>
-        <button class="btn btn-ghost" onclick="limpiarCardio()">✕ Limpiar</button>
+    </div>
+ 
+    <!-- Progresión por ejercicio -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">📈 Progresión por ejercicio</h3></div>
+      <div class="cuerpoTarjeta">
+        <div class="contenedorPestaniasMes" id="pestaniasMesEjercicios"></div>
+        <div id="contenedorProgresionEjercicios"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Semana actual -->
-  <div class="card">
-    <div class="card-head"><h3>📅 Esta semana</h3></div>
-    <div class="card-body">
-      <div class="cardio-day-grid" id="cardio-semana"></div>
-      <div class="stats-strip" id="stats-cardio-mes"></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: EJERCICIOS
-════════════════════════════════════════════════════════ -->
-<div class="screen" id="screen-ejercicios">
-
-  <div class="sec-title">Ejercicios</div>
-  <div class="sec-sub">// peso, series y progresión por ejercicio</div>
-
-  <div class="datebar">
-    <div class="datebar-left">
-      <h2 id="ej-titulo">SEMANA</h2>
-      <p id="ej-fecha-label">—</p>
-    </div>
-    <input type="date" class="date-input" id="ej-fecha" onchange="actualizarFechaEj()"/>
-  </div>
-
-  <!-- Selector de ejercicio -->
-  <div class="card">
-    <div class="card-head"><h3>💪 Cargar ejercicio</h3></div>
-    <div class="card-body">
-
-      <div class="field" style="margin-bottom:1rem">
-        <label>Ejercicio</label>
-        <select id="ej-nombre">
-          <option value="">Seleccioná...</option>
-          <optgroup label="🍑 Piernas / Glúteos">
-            <option>Hip Thrust (libre)</option>
-            <option>Hip Thrust (máquina)</option>
-            <option>Peso Muerto Convencional</option>
-            <option>Peso Muerto Unilateral</option>
-            <option>Sentadilla Búlgara</option>
-            <option>Patada de Glúteos</option>
-            <option>Máquina Abductores</option>
-            <option>Máquina de Isquios</option>
-            <option>Sentadilla en Smith</option>
-            <option>Sentadilla Goblet</option>
-            <option>Sentadilla Sumo</option>
-            <option>Sillón de Cuadriceps</option>
-            <option>Prensa</option>
-            <option>Aductores (máquina)</option>
-            <option>Abductores</option>
-            <option>Elevación de cadera a una pierna</option>
-          </optgroup>
-          <optgroup label="🔵 Espalda / Bíceps">
-            <option>Dorsalera (agarre abierto)</option>
-            <option>Remo Bajo con Cable</option>
-            <option>Pullover</option>
-            <option>Remo con Mancuerna</option>
-            <option>Curl Martillo</option>
-            <option>Bíceps con Barra W</option>
-            <option>Bíceps Unilateral</option>
-          </optgroup>
-          <optgroup label="🟠 Pecho / Tríceps / Hombro">
-            <option>Aperturas Peck Deck</option>
-            <option>Press de Banca</option>
-            <option>Banco Inclinado</option>
-            <option>Press de Hombros</option>
-            <option>Vuelos Laterales</option>
-            <option>Tríceps Pushdown</option>
-          </optgroup>
-        </select>
+ 
+  </section>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: ASISTENCIA
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-asistencia">
+ 
+    <h1 class="tituloPantalla">Asistencia</h1>
+    <p class="subtituloPantalla">// registrá cada día del mes</p>
+ 
+    <div class="contenedorPestaniasMes" id="pestaniasMesAsistencia"></div>
+ 
+    <!-- Grilla de gym -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta">
+        <h3 class="tituloTarjeta">
+          🏋 Asistencia al Gym
+          <span class="etiquetaTarjeta" id="etiquetaMesAsistencia">—</span>
+        </h3>
       </div>
-
-      <div class="ej-row">
-        <div class="field">
-          <label>Descripción del peso</label>
-          <input type="text" id="ej-peso-desc" placeholder="Ej: 90+90+90+90 + barra 20"/>
-        </div>
-        <div class="field">
-          <label>Peso total (kg)</label>
-          <input type="number" id="ej-peso-total" placeholder="110" min="0" step="0.5"/>
-        </div>
-        <div class="field">
-          <label>Series</label>
-          <input type="text" id="ej-series" placeholder="4x10"/>
-        </div>
-        <div class="field">
-          <label>Semana N°</label>
-          <input type="number" id="ej-semana" placeholder="1" min="1" max="6"/>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="guardarEjercicio()">💾 Guardar ejercicio</button>
-        <button class="btn btn-ghost" onclick="limpiarEj()">✕ Limpiar</button>
+      <div class="cuerpoTarjeta">
+        <div class="grillaAsistencia" id="grillaAsistenciaGym"></div>
+        <div class="tiraEstadisticas" id="tiraEstadisticasGym"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Historial de ejercicios del mes -->
-  <div class="card">
-    <div class="card-head">
-      <h3>📈 Progresión por ejercicio</h3>
+ 
+    <!-- Grilla de cardio -->
+    <div class="tarjeta">
+      <div class="cabeceraTarjeta">
+        <h3 class="tituloTarjeta">🏃 Cardio del mes</h3>
+      </div>
+      <div class="cuerpoTarjeta">
+        <div class="grillaAsistencia" id="grillaAsistenciaCardio"></div>
+        <div class="tiraEstadisticas" id="tiraEstadisticasCardio"></div>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="mes-tabs" id="ej-mes-tabs"></div>
-      <div id="ej-progresion"></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: ASISTENCIA
-════════════════════════════════════════════════════════ -->
-<div class="screen" id="screen-asistencia">
-
-  <div class="sec-title">Asistencia</div>
-  <div class="sec-sub">// registrá cada día del mes</div>
-
-  <div class="mes-tabs" id="asist-mes-tabs"></div>
-
-  <!-- Grid gym -->
-  <div class="card">
-    <div class="card-head">
-      <h3>🏋 Asistencia al Gym <span class="tag" id="asist-mes-label">—</span></h3>
-    </div>
-    <div class="card-body">
-      <div class="asist-grid" id="asist-grid-gym"></div>
-      <div class="stats-strip" id="asist-stats-gym"></div>
-    </div>
-  </div>
-
-  <!-- Grid cardio -->
-  <div class="card">
-    <div class="card-head">
-      <h3>🏃 Cardio del mes</h3>
-    </div>
-    <div class="card-body">
-      <div class="asist-grid" id="asist-grid-cardio"></div>
-      <div class="stats-strip" id="asist-stats-cardio"></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: HISTORIAL
-════════════════════════════════════════════════════════ -->
-<div class="screen" id="screen-historial">
-
-  <div class="sec-title">Historial</div>
-  <div class="sec-sub">// todos tus registros guardados</div>
-
-  <div class="mes-tabs" id="hist-mes-tabs"></div>
-  <div id="historial-list"></div>
-
-</div>
-
-<!-- ════════════════════════════════════════════════════════
-  SCREEN: RUTINA
-════════════════════════════════════════════════════════ -->
-<div class="screen" id="screen-rutina">
-
-  <div class="sec-title">Rutina 2026</div>
-  <div class="sec-sub">// desde enero 2026</div>
-
-  <div id="rutina-container"></div>
-
-</div>
-
+ 
+  </section>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: HISTORIAL
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-historial">
+ 
+    <h1 class="tituloPantalla">Historial</h1>
+    <p class="subtituloPantalla">// todos tus registros guardados</p>
+ 
+    <div class="contenedorPestaniasMes" id="pestaniasMesHistorial"></div>
+    <div id="listaHistorial"></div>
+ 
+  </section>
+ 
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: RUTINA
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-rutina">
+ 
+    <h1 class="tituloPantalla">Rutina 2026</h1>
+    <p class="subtituloPantalla">// Desde enero 2026 a ...</p>
+    <div id="contenedorRutina"></div>
+ 
+  </section>
+ 
 </main>
-
+ 
 <script src="gym.js"></script>
 </body>
 </html>
