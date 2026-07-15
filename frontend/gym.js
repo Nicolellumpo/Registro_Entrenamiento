@@ -116,6 +116,7 @@ function setScreen(idPantalla) {
   if (idPantalla === 'asistencia')  inicializarPantallaAsistencia();
   if (idPantalla === 'historial')   inicializarPantallaHistorial();
   if (idPantalla === 'rutina')      inicializarPantallaRutina();
+  if (idPantalla === 'asistente')  inicializarPantallaAsistente();
 }
 
 // ── Toast de notificaciones ───────────────────────────────
@@ -674,6 +675,193 @@ function toggleAccordionRutina(indice) {
   const flecha  = document.getElementById('flechaRutina-' + indice);
   const abierto = cuerpo.classList.toggle('abierto');
   flecha.textContent = abierto ? '▼' : '▶';
+}
+
+// ── ASISTENTE: configuración ──────────────────────────────
+
+// El system prompt y la API key viven en el backend (Render), no acá.
+// El frontend solo manda los mensajes — la key nunca llega al navegador.
+// URL automática: local en desarrollo, Render en producción.
+const URL_CHAT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001/api/chat'
+  : 'https://gymtracker-api-TUNOMBRE.onrender.com/api/chat';
+
+// Historial de mensajes para mantener contexto de la conversación
+let historialMensajesChat = [];
+
+// ── ASISTENTE: inicialización ─────────────────────────────
+
+function inicializarPantallaAsistente() {
+  // Solo reiniciar si está vacío
+  const contenedor = document.getElementById('contenedorMensajesChat');
+  if (historialMensajesChat.length === 0 && !contenedor.querySelector('.mensajeChat')) {
+    // Ya tiene el mensaje de bienvenida del HTML
+  }
+}
+
+// ── ASISTENTE: usar sugerencia rápida ────────────────────
+
+function usarSugerencia(boton) {
+  const pregunta = boton.textContent.trim();
+  document.getElementById('inputMensajeChat').value = pregunta;
+  // Ocultar sugerencias al usar una
+  document.getElementById('contenedorSugerencias').style.display = 'none';
+  enviarMensajeChat();
+}
+
+// ── ASISTENTE: manejar Enter ──────────────────────────────
+
+function manejarEnterChat(evento) {
+  // Enter sin Shift envía. Shift+Enter hace salto de línea.
+  if (evento.key === 'Enter' && !evento.shiftKey) {
+    evento.preventDefault();
+    enviarMensajeChat();
+  }
+}
+
+// ── ASISTENTE: enviar mensaje ─────────────────────────────
+
+async function enviarMensajeChat() {
+  const inputEl    = document.getElementById('inputMensajeChat');
+  const textoPregunta = inputEl.value.trim();
+
+  if (!textoPregunta) return;
+
+  // Ocultar sugerencias después del primer mensaje
+  document.getElementById('contenedorSugerencias').style.display = 'none';
+
+  // Mostrar mensaje del usuario
+  agregarMensajeAlChat('usuario', textoPregunta);
+  inputEl.value = '';
+
+  // Agregar al historial
+  historialMensajesChat.push({ role: 'user', content: textoPregunta });
+
+  // Deshabilitar input mientras espera
+  const botonEnviar = document.getElementById('botonEnviarChat');
+  botonEnviar.disabled = true;
+  document.getElementById('textoBotonEnviar').textContent = '...';
+
+  // Mostrar indicador de carga (typing dots)
+  const idCarga = mostrarIndicadorCarga();
+
+  try {
+    // El frontend llama a NUESTRO backend, que tiene la API key guardada
+    // como variable de entorno en Render. La key nunca toca el navegador.
+    const respuesta = await fetch(URL_CHAT, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${token}`,   // token JWT del usuario logueado
+      },
+      body: JSON.stringify({
+        mensajes: historialMensajesChat,       // solo mandamos los mensajes
+      }),
+    });
+
+    const datos = await respuesta.json();
+
+    // Remover indicador de carga
+    quitarIndicadorCarga(idCarga);
+
+    if (!respuesta.ok) {
+      console.error('Error backend:', datos);
+      agregarMensajeAlChat('asistente', '⚠ ' + (datos.mensaje || 'Error al conectar con el asistente.'));
+      return;
+    }
+
+    const textoRespuesta = datos.respuesta;
+
+    // Agregar respuesta al historial y mostrarla
+    historialMensajesChat.push({ role: 'assistant', content: textoRespuesta });
+    agregarMensajeAlChat('asistente', textoRespuesta);
+
+  } catch (error) {
+    quitarIndicadorCarga(idCarga);
+    console.error('Error de red:', error);
+    agregarMensajeAlChat('asistente', '⚠ No se pudo conectar. Revisá tu conexión a internet.');
+  } finally {
+    botonEnviar.disabled = false;
+    document.getElementById('textoBotonEnviar').textContent = 'Enviar';
+    inputEl.focus();
+  }
+}
+
+// ── ASISTENTE: agregar mensaje al DOM ─────────────────────
+
+function agregarMensajeAlChat(rol, texto) {
+  const contenedor  = document.getElementById('contenedorMensajesChat');
+
+  // Quitar mensaje de bienvenida si es el primer mensaje real
+  const bienvenida = contenedor.querySelector('.mensajeBienvenida');
+  if (bienvenida) bienvenida.remove();
+
+  const divMensaje  = document.createElement('div');
+  divMensaje.className = `mensajeChat ${rol}`;
+
+  // Formatear texto: **negrita** y *cursiva*
+  const textoFormateado = formatearTextoChat(texto);
+
+  divMensaje.innerHTML = `
+    <span class="etiquetaMensaje">${rol === 'usuario' ? 'Vos' : '🤖 GymBot'}</span>
+    <div class="burbujaMensaje">${textoFormateado}</div>`;
+
+  contenedor.appendChild(divMensaje);
+
+  // Scroll automático al último mensaje
+  contenedor.scrollTop = contenedor.scrollHeight;
+}
+
+// ── ASISTENTE: formatear markdown básico ──────────────────
+
+function formatearTextoChat(texto) {
+  return texto
+    // **negrita**
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // *cursiva*
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Saltos de línea
+    .replace(/\n\n/g, '</p><p style="margin-top:.6rem">')
+    .replace(/\n/g, '<br/>');
+}
+
+// ── ASISTENTE: indicador de escritura ────────────────────
+
+function mostrarIndicadorCarga() {
+  const contenedor = document.getElementById('contenedorMensajesChat');
+  const id         = 'carga-' + Date.now();
+
+  const divCarga = document.createElement('div');
+  divCarga.className = 'mensajeChat asistente mensajeCargando';
+  divCarga.id        = id;
+  divCarga.innerHTML = `
+    <span class="etiquetaMensaje">🤖 GymBot</span>
+    <div class="burbujaMensaje">
+      <div class="puntoCarga"></div>
+      <div class="puntoCarga"></div>
+      <div class="puntoCarga"></div>
+    </div>`;
+
+  contenedor.appendChild(divCarga);
+  contenedor.scrollTop = contenedor.scrollHeight;
+  return id;
+}
+
+function quitarIndicadorCarga(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+// ── ASISTENTE: limpiar chat ───────────────────────────────
+
+function limpiarChat() {
+  historialMensajesChat = [];
+  document.getElementById('contenedorMensajesChat').innerHTML = `
+    <div class="mensajeBienvenida">
+      <div class="iconoBienvenida">🏋️</div>
+      <p class="textoBienvenida">Hola! Soy tu asistente de entrenamiento.<br/>Preguntame sobre técnica, diferencias entre ejercicios, grupos musculares o cualquier duda con los pesos.</p>
+    </div>`;
+  document.getElementById('contenedorSugerencias').style.display = 'block';
 }
 
 // ── Inicialización al cargar la página ───────────────────

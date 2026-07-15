@@ -1,82 +1,113 @@
-# 🏋️ GymTracker — Registro de Entrenamiento 2026
+# 🏋️ GymTracker — Registro de Entrenamiento
 
-Aplicación web personal para registrar el entrenamiento diario: asistencia, cardio, ejercicios con cargas, y sensaciones físicas. Desarrollada con **HTML, CSS y JavaScript** — sin frameworks ni dependencias externas.
+App web fullstack para registrar entrenamientos diarios con autenticación por usuario.
+Cada persona ve **solo sus propios datos** desde cualquier dispositivo.
 
-Inspirada en mis propias planillas de Excel que usaba para trackear todo, transformadas en una sola app que puedo abrir desde cualquier dispositivo.
-
-## Demo
-
-> Abrí `index.html` directo en el navegador. No necesita servidor ni conexión a internet.
+**Demo:** [nicolellumpo.github.io/Registro_Entrenamiento](https://nicolellumpo.github.io/Registro_Entrenamiento)  
 
 ---
-
-## Funcionalidades
-
-| Módulo | Qué registra |
-|---|---|
-| **Hoy** | Grupo muscular, energía (1–5), fatiga, sensación post-entreno, progresión, calidad de sueño, molestias y notas libres |
-| **Cardio** | Min caminando / corriendo / bici · pulsaciones · total automático |
-| **Ejercicios** | Nombre, descripción del peso, kg totales, series y semana — con progresión visual por mes |
-| **Asistencia** | Grilla mensual ✅/❌ por día para gym y cardio por separado |
-| **Historial** | Todos los registros filtrados por mes con badges de estado |
-| **Rutina** | Rutina semanal completa con ejercicios y series, consultable offline |
 
 ---
 
 ## Estructura del proyecto
 
 ```
-gymtracker/
-├── gym.css
-├── gym.js 
-├── index.html    
+Registro_Entrenamiento/
+│
+├── frontend/
+│   ├── index.html              ← estructura y pantallas (HTML puro)
+│   ├── gym.css                 ← variables, layout, componentes
+│   └── gym.js                  ← lógica, fetch al backend, localStorage
+│
+├── backend/
+│   ├── src/
+│   │   ├── index.js                    ← servidor Express + rutas
+│   │   ├── routes/
+│   │   │   ├── auth.js                 ← registro, login, me
+│   │   │   ├── datos.js                ← datos de entrenamiento
+│   │   │   └── chat.js                 ← asistente IA
+│   │   ├── controllers/
+│   │   │   ├── authController.js       ← bcrypt + JWT
+│   │   │   ├── datosController.js      ← CRUD por userId
+│   │   │   └── chatController.js       ← proxy seguro a Anthropic
+│   │   ├── middleware/
+│   │   │   └── verificarToken.js       ← valida JWT en cada request
+│   │   └── models/
+│   │       └── db.js                   ← leer/escribir JSON
+│   ├── data/                           ← generado al correr (en .gitignore)
+│   │   ├── usuarios.json
+│   │   └── entrenamientos.json
+│   └── package.json
+│
+├── render.yaml                 ← configuración de deploy en Render
+├── .gitignore
 └── README.md
 ```
 
 ---
 
-## Cómo usar
+## Funcionalidades
+
+| Pantalla | Qué hace |
+|---|---|
+| **Hoy** | Registra grupo muscular, energía, fatiga, progresión, sueño, molestias y notas |
+| **Cardio** | Minutos caminando / corriendo / bici + pulsaciones + resumen semanal |
+| **Ejercicios** | Peso usado, kg totales, series y progresión por mes con barras visuales |
+| **Asistencia** | Grilla mensual ✅/❌ para gym y cardio por separado |
+| **Historial** | Todos los registros filtrados por mes con badges de estado |
+| **Rutina** | Rutina semanal completa consultable offline |
+| **Asistente** | Chat con IA especializada en entrenamiento con pesas (GymBot) |
+
+---
+
+## Correr en local
 
 ```bash
-# Abrí directo en el navegador
-open index.html
+# Terminal 1 — backend
+cd backend
+npm install
+npm run dev        # levanta en localhost:3001
 
-# O con Live Server (VSCode)
-# Click derecho en index.html → "Open with Live Server"
+# Terminal 2 — frontend
+# Abrí frontend/index.html con Live Server de VSCode
+```
+---
+
+## Deploy
+
+### Backend → Render
+1. [render.com](https://render.com) → New Web Service → conectar este repo
+2. Render detecta `render.yaml` automáticamente
+3. En Environment → agregar `ANTHROPIC_API_KEY` con tu key real
+4. Deploy → obtenés la URL: `https://gymtracker-api-XXX.onrender.com`
+
+### Frontend → GitHub Pages
+1. En `frontend/logicaGymtracker.js` línea ~685, reemplazá la URL de Render por la tuya
+2. Settings → Pages → Branch: main → Folder: /frontend
+
+---
+
+## Conceptos aplicados
+
+```
+Backend:
+✔ Arquitectura MVC (routes / controllers / middleware / models)
+✔ Autenticación JWT — generación, verificación, expiración (7 días)
+✔ Hash de contraseñas con bcrypt (salt rounds = 10)
+✔ Proxy seguro a API externa — la key nunca sale del servidor
+✔ Middleware de protección aplicado a nivel de router
+✔ Separación de datos por userId (multiusuario real)
+✔ Variables de entorno para secretos
+
+Frontend:
+✔ Separación en 3 archivos: HTML / CSS / JS
+✔ CSS Variables para theming completo
+✔ Fetch API con JWT en Authorization header
+✔ Detección automática local vs producción
+✔ SPA sin frameworks — renderizado dinámico puro JS
+✔ Logout automático si el token expira (401)
 ```
 
-Al abrirlo por primera vez, la app está vacía. Empezá desde la pestaña **"Hoy"** para registrar tu primer entrenamiento.
-
 ---
 
-## Persistencia de datos
-
-Todos los datos se guardan en `localStorage` del navegador, organizados en estas colecciones:
-
-| Key | Contenido |
-|---|---|
-| `registros` | Registros diarios (energía, fatiga, sensaciones, etc.) |
-| `cardios` | Sesiones de cardio con minutos por modalidad |
-| `ejercicios` | Cargas por ejercicio, semana y mes |
-| `asist_gym` | Asistencia al gym por mes (✅/❌ por día) |
-| `asist_cardio` | Cardio completado por mes (✅/❌ por día) |
-
----
-
-## Decisiones de diseño
-
-- **Una sola pestaña = un solo flujo**: cada módulo tiene su propia pantalla para no mezclar datos.
-- **Guardar desde "Hoy" marca asistencia automáticamente**: si guardás un registro, el día se marca ✅ en la grilla de asistencia.
-- **Guardar cardio también actualiza asistencia**: consistencia entre módulos sin doble entrada.
-- **Progresión visual**: cada ejercicio muestra barras de progreso relativas al peso máximo del mes para visualizar la evolución.
-
----
-
-## Origen del proyecto
-
-Reemplacé 5 archivos de Excel (Asistencia, Cardio, Proceso Piernas, Proceso Superior, Registro Simple) con esta app unificada. La lógica de cada planilla está representada en la estructura de datos y los módulos de la app.
-
----
-
-> Desarrollado por **Nicole Llumpo** — Futura Ingeniera en Sistemas de Información 
-> Buenos Aires, 2026
+> Desarrollado por **Nicole Llumpo** — Ingeniería en Sistemas de Información, UTN · Buenos Aires 2026
