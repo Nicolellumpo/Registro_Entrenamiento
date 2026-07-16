@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>GymTracker 2026</title>
-<link rel="stylesheet" href="gym.css"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GymTracker 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="gym.css"/>
 </head>
 <body>
 
-<div id="contenedorToast"></div> 
+<!-- ── Toast de notificaciones ─────────────────────────── -->
+<div id="contenedorToast"></div>
 
 <!-- ── Navegación principal ────────────────────────────── -->
 <nav>
@@ -22,19 +23,20 @@
     <button class="pestaniaNav" onclick="setScreen('asistencia')">📅 Asistencia</button>
     <button class="pestaniaNav" onclick="setScreen('historial')">📋 Historial</button>
     <button class="pestaniaNav" onclick="setScreen('rutina')">📄 Rutina</button>
+    <button class="pestaniaNav" onclick="setScreen('asistente')">🤖 Asistente</button>
   </div>
 </nav>
- 
+
 <main>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: HOY — Registro diario
   ════════════════════════════════════════════════════ -->
   <section class="pantalla activa" id="pantalla-hoy">
- 
+
     <h1 class="tituloPantalla">Registro del día</h1>
     <p class="subtituloPantalla">// cómo salió el entrenamiento de hoy</p>
- 
+
     <!-- Barra de fecha -->
     <div class="barraFecha">
       <div class="barraFechaTextos">
@@ -43,7 +45,7 @@
       </div>
       <input type="date" class="inputFecha" id="inputFechaHoy" onchange="actualizarFechaHoy()"/>
     </div>
- 
+
     <!-- Formulario de sensaciones -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta">
@@ -51,7 +53,7 @@
       </div>
       <div class="cuerpoTarjeta">
         <div class="grilla2Columnas">
- 
+
           <!-- Campo: grupo muscular -->
           <div class="campoFormulario">
             <label for="selectGrupoMuscular">Grupo muscular</label>
@@ -64,7 +66,7 @@
               <option>Legs Day</option>
             </select>
           </div>
- 
+
           <!-- Campo: energía con estrellas -->
           <div class="campoFormulario">
             <label>Energía (1–5)</label>
@@ -76,7 +78,7 @@
               <div class="estrella" onclick="setStar(5)">5</div>
             </div>
           </div>
- 
+
           <!-- Campo: fatiga -->
           <div class="campoFormulario">
             <label>Fatiga</label>
@@ -86,7 +88,7 @@
               <div class="pill" onclick="togglePill(this,'fatiga','Alta')">Alta</div>
             </div>
           </div>
- 
+
           <!-- Campo: sensación post-entreno -->
           <div class="campoFormulario">
             <label>Sensación post-entreno</label>
@@ -96,7 +98,7 @@
               <div class="pill" onclick="togglePill(this,'sensacion','Muy agotada')">Muy agotada</div>
             </div>
           </div>
- 
+
           <!-- Campo: progresión -->
           <div class="campoFormulario">
             <label>Progresión</label>
@@ -106,7 +108,7 @@
               <div class="pill" onclick="togglePill(this,'progresion','Bajé peso')">⬇ Bajé peso</div>
             </div>
           </div>
- 
+
           <!-- Campo: sueño -->
           <div class="campoFormulario">
             <label>Calidad del sueño</label>
@@ -116,7 +118,7 @@
               <div class="pill" onclick="togglePill(this,'sueno','Malo')">😵 Malo</div>
             </div>
           </div>
- 
+
           <!-- Campo: molestias -->
           <div class="campoFormulario">
             <label>Molestias</label>
@@ -128,15 +130,15 @@
               <div class="pill" onclick="togglePill(this,'molestias','Otro')">Otro</div>
             </div>
           </div>
- 
+
           <!-- Campo: notas -->
           <div class="campoFormulario">
             <label for="textareaNotasHoy">Notas adicionales</label>
             <textarea id="textareaNotasHoy" placeholder="Algo que quieras recordar de hoy..."></textarea>
           </div>
- 
+
         </div>
- 
+
         <!-- Botones de acción -->
         <div class="filaBotons">
           <button class="boton botonPrimario" onclick="guardarRegistro()">💾 Guardar registro</button>
@@ -144,7 +146,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- Resumen estadístico del mes -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta">
@@ -156,17 +158,17 @@
         <div class="tiraEstadisticas" id="tiraEstadisticasHoy"></div>
       </div>
     </div>
- 
+
   </section>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: CARDIO
   ════════════════════════════════════════════════════ -->
   <section class="pantalla" id="pantalla-cardio">
- 
+
     <h1 class="tituloPantalla">Cardio</h1>
     <p class="subtituloPantalla">// minutos y pulsaciones por sesión</p>
- 
+
     <div class="barraFecha">
       <div class="barraFechaTextos">
         <h2 class="tituloDiaSemana" id="tituloDiaCardio">CARDIO</h2>
@@ -174,7 +176,7 @@
       </div>
       <input type="date" class="inputFecha" id="inputFechaCardio" onchange="actualizarFechaCardio()"/>
     </div>
- 
+
     <!-- Formulario de sesión de cardio -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">🏃 Sesión de hoy</h3></div>
@@ -211,7 +213,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- Vista semanal de cardio -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">📅 Esta semana</h3></div>
@@ -220,17 +222,17 @@
         <div class="tiraEstadisticas" id="tiraEstadisticasCardioMes"></div>
       </div>
     </div>
- 
+
   </section>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: EJERCICIOS
   ════════════════════════════════════════════════════ -->
   <section class="pantalla" id="pantalla-ejercicios">
- 
+
     <h1 class="tituloPantalla">Ejercicios</h1>
     <p class="subtituloPantalla">// peso, series y progresión por ejercicio</p>
- 
+
     <div class="barraFecha">
       <div class="barraFechaTextos">
         <h2 class="tituloDiaSemana" id="tituloDiaEjercicios">SEMANA</h2>
@@ -238,12 +240,12 @@
       </div>
       <input type="date" class="inputFecha" id="inputFechaEjercicios" onchange="actualizarFechaEj()"/>
     </div>
- 
+
     <!-- Formulario para cargar ejercicio -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">💪 Cargar ejercicio</h3></div>
       <div class="cuerpoTarjeta">
- 
+
         <div class="campoFormulario campoEjercicioNombre">
           <label for="selectNombreEjercicio">Ejercicio</label>
           <select id="selectNombreEjercicio">
@@ -285,7 +287,7 @@
             </optgroup>
           </select>
         </div>
- 
+
         <div class="filaEjercicio">
           <div class="campoFormulario">
             <label for="inputDescripcionPeso">Descripción del peso</label>
@@ -304,14 +306,14 @@
             <input type="number" id="inputNumeroSemana" placeholder="1" min="1" max="6"/>
           </div>
         </div>
- 
+
         <div class="filaBotons">
           <button class="boton botonPrimario" onclick="guardarEjercicio()">💾 Guardar ejercicio</button>
           <button class="boton botonSecundario" onclick="limpiarEj()">✕ Limpiar</button>
         </div>
       </div>
     </div>
- 
+
     <!-- Progresión por ejercicio -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta"><h3 class="tituloTarjeta">📈 Progresión por ejercicio</h3></div>
@@ -320,19 +322,19 @@
         <div id="contenedorProgresionEjercicios"></div>
       </div>
     </div>
- 
+
   </section>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: ASISTENCIA
   ════════════════════════════════════════════════════ -->
   <section class="pantalla" id="pantalla-asistencia">
- 
+
     <h1 class="tituloPantalla">Asistencia</h1>
     <p class="subtituloPantalla">// registrá cada día del mes</p>
- 
+
     <div class="contenedorPestaniasMes" id="pestaniasMesAsistencia"></div>
- 
+
     <!-- Grilla de gym -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta">
@@ -346,7 +348,7 @@
         <div class="tiraEstadisticas" id="tiraEstadisticasGym"></div>
       </div>
     </div>
- 
+
     <!-- Grilla de cardio -->
     <div class="tarjeta">
       <div class="cabeceraTarjeta">
@@ -357,35 +359,93 @@
         <div class="tiraEstadisticas" id="tiraEstadisticasCardio"></div>
       </div>
     </div>
- 
+
   </section>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: HISTORIAL
   ════════════════════════════════════════════════════ -->
   <section class="pantalla" id="pantalla-historial">
- 
+
     <h1 class="tituloPantalla">Historial</h1>
     <p class="subtituloPantalla">// todos tus registros guardados</p>
- 
+
     <div class="contenedorPestaniasMes" id="pestaniasMesHistorial"></div>
     <div id="listaHistorial"></div>
- 
+
   </section>
- 
+
   <!-- ════════════════════════════════════════════════════
     PANTALLA: RUTINA
   ════════════════════════════════════════════════════ -->
   <section class="pantalla" id="pantalla-rutina">
- 
+
     <h1 class="tituloPantalla">Rutina 2026</h1>
-    <p class="subtituloPantalla">// Desde enero 2026 a ...</p>
+    <p class="subtituloPantalla">// desde enero 2026</p>
+
     <div id="contenedorRutina"></div>
- 
+
   </section>
- 
+
+  <!-- ════════════════════════════════════════════════════
+    PANTALLA: ASISTENTE
+  ════════════════════════════════════════════════════ -->
+  <section class="pantalla" id="pantalla-asistente">
+
+    <h1 class="tituloPantalla">Asistente</h1>
+    <p class="subtituloPantalla">// preguntá sobre ejercicios, técnica y diferencias entre variantes</p>
+
+    <!-- Sugerencias rápidas -->
+    <div class="contenedorSugerencias" id="contenedorSugerencias">
+      <p class="tituloSugerencias">Preguntas frecuentes</p>
+      <div class="grillaSugerencias">
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Diferencia entre peso muerto convencional y rumano?</button>
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Cuándo usar barra vs mancuernas en hip thrust?</button>
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Diferencia entre sentadilla sumo y goblet?</button>
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Qué músculo trabaja más la sentadilla búlgara?</button>
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Diferencia entre remo con mancuerna y remo bajo en cable?</button>
+        <button class="botonSugerencia" onclick="usarSugerencia(this)">¿Cómo sé si estoy usando demasiado peso?</button>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="tarjeta tarjetaChat">
+      <div class="cabeceraTarjeta">
+        <h3 class="tituloTarjeta">
+          🤖 GymBot
+          <span class="etiquetaTarjeta etiquetaIA">IA</span>
+        </h3>
+        <button class="botonLimpiarChat" onclick="limpiarChat()">✕ Limpiar chat</button>
+      </div>
+
+      <!-- Mensajes -->
+      <div class="contenedorMensajes" id="contenedorMensajesChat">
+        <div class="mensajeBienvenida">
+          <div class="iconoBienvenida">🏋️</div>
+          <p class="textoBienvenida">Hola! Soy tu asistente de entrenamiento.<br/>Preguntame sobre técnica, diferencias entre ejercicios, grupos musculares o cualquier duda con los pesos.</p>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="areaInputChat">
+        <textarea
+          class="inputMensajeChat"
+          id="inputMensajeChat"
+          placeholder="Ej: ¿Cuál es la diferencia entre el curl martillo y el curl con barra W?"
+          rows="2"
+          onkeydown="manejarEnterChat(event)"
+        ></textarea>
+        <button class="botonEnviarChat" id="botonEnviarChat" onclick="enviarMensajeChat()">
+          <span id="textoBotonEnviar">Enviar</span>
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
 </main>
- 
+
 <script src="gym.js"></script>
 </body>
 </html>
