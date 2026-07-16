@@ -1,0 +1,25 @@
+{
+  "name": "registro-entrenamiento-api",
+  "version": "2.1.0",
+  "description": "Backend API para GymTracker con autenticación JWT y proxy a Anthropic",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev":   "nodemon src/index.js"
+  },
+  "author": "Nicole Llumpo",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs":       "^2.4.3",
+    "cors":           "^2.8.5",
+    "express":        "^4.18.2",
+    "jsonwebtoken":   "^9.0.0",
+    "uuid":           "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

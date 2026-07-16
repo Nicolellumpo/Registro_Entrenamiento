@@ -7,8 +7,6 @@ Cada persona ve **solo sus propios datos** desde cualquier dispositivo.
 
 ---
 
----
-
 ## Estructura del proyecto
 
 ```
