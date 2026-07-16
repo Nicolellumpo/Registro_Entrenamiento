@@ -10,6 +10,8 @@
  * Nunca está en el código fuente.
  */
 
+require('dotenv').config();
+
 const express = require('express');
 const cors    = require('cors');
 

@@ -684,7 +684,7 @@ function toggleAccordionRutina(indice) {
 // URL automática: local en desarrollo, Render en producción.
 const URL_CHAT = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3001/api/chat'
-  : 'https://gymtracker-api-TUNOMBRE.onrender.com/api/chat';
+  : 'https://registro-entrenamiento.onrender.com';
 
 // Historial de mensajes para mantener contexto de la conversación
 let historialMensajesChat = [];
